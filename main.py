@@ -5,9 +5,9 @@ def print_matrix(mat):
     print(str(mat).replace('[', ' ').replace(']', ' ').replace('\n', '\n '))
 
 
-def paste(matF, matrix, column_index, row_index):
-    for row, i in zip(matrix, range(row_index, row_index + len(matrix))):
-        for elem, j in zip(row, range(column_index, column_index + len(row))):
+def paste(matF, matrix, col_in, row_in):
+    for row, i in zip(matrix, range(row_in, row_in + len(matrix))):
+        for elem, j in zip(row, range(col_in, col_in + len(row))):
             matF[i][j] = elem
 
 
