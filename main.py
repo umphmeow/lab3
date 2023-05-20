@@ -13,10 +13,10 @@ def paste(matF, matrix, col_in, row_in):
 
 K = int(input('Введите число K: '))
 
-n = int(input('Введите число N, (N >= 5): '))
+n = int(input('Введите число N, (N > 5): '))
 
 if n < 5:
-    print('Введен неправильное N, попробуйте еще')
+    print('Введено неправильное N')
     exit()
 
 type = input('Использовать случайно сгенерированную матрицу? (y/n): ').lower().strip()
