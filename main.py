@@ -1,15 +1,12 @@
-import numpy as np
-
-
+import random
 def print_matrix(mat):
-    print(str(mat).replace('[', ' ').replace(']', ' ').replace('\n', '\n '))
-
+    for row in mat:
+        print(' '.join(str(elem) for elem in row))
 
 def paste(matF, matrix, col_in, row_in):
     for row, i in zip(matrix, range(row_in, row_in + len(matrix))):
         for elem, j in zip(row, range(col_in, col_in + len(row))):
             matF[i][j] = elem
-
 
 K = int(input('Введите число K: '))
 
@@ -22,35 +19,45 @@ if n < 5:
 type = input('Использовать случайно сгенерированную матрицу? (y/n): ').lower().strip()
 
 if type == 'y':
-    A = np.random.randint(-10, 10, (n, n))
+    A = [[random.randint(-10, 10) for j in range(n)] for i in range(n)]
 else:
-    A = np.eye(n)
+    A = [[1 if i==j else 0 for j in range(n)] for i in range(n)]
 
-print('Матрица А:\n', print_matrix(A), '\n')
+print('Матрица А:')
+print_matrix(A)
+print()
 
 n2 = n_hl = n // 2
 if n % 2 != 0:
     n2 += 1
 
-E = A[0:n_hl, n2:n]
-B = A[n2:n, n2:n]
-C = A[n2:n, 0:n_hl]
-D = A[0:n_hl, 0:n_hl]
+E = [row[n2:n] for row in A[0:n_hl]]
+B = [row[n2:n] for row in A[n2:n]]
+C = [row[0:n_hl] for row in A[n2:n]]
+D = [row[0:n_hl] for row in A[0:n_hl]]
 
 print('--------------------------------------------------------------------------------------------------------------------------------------------------------')
 print('Подматрицы матрицы A:')
-print('Подматрица D\n', D, '\n')
-print('Подматрица E\n', E, '\n')
-print('Подматрица C\n', C, '\n')
-print('Подматрица B\n', B, '\n')
+print('Подматрица D')
+print_matrix(D)
+print()
+print('Подматрица E')
+print_matrix(E)
+print()
+print('Подматрица C')
+print_matrix(C)
+print()
+print('Подматрица B')
+print_matrix(B)
+print()
 
 
 print('--------------------------------------------------------------------------------------------------------------------------------------------------------')
+sym=True
 for i in range(n):
     for j in range(n):
         if i != j:
             if A[i][j] == A[j][i]:
-                sym=True
                 continue
             else:
                 sym = False
@@ -68,38 +75,52 @@ else:
     print('Матрица А не симметрична относительно главной диагонали')
     C, E = E, C
 
-F = np.zeros((n, n))
-F[:n_hl, :n_hl] = D
-F[:n_hl, n2:n] = E
-F[n2:n, n2:n] = B
-F[n2:n, :n_hl] = C
+F = [[0 for j in range(n)] for i in range(n)]
+for i in range(n_hl):
+    for j in range(n_hl):
+        F[i][j] = D[i][j]
+for i in range(n_hl):
+    for j in range(n2, n):
+        F[i][j] = E[i][j-n2]
+for i in range(n2, n):
+    for j in range(n2, n):
+        F[i][j] = B[i-n2][j-n2]
+for i in range(n2, n):
+    for j in range(n_hl):
+        F[i][j] = C[i-n2][j]
 
 print('Матрица F:')
 print_matrix(F)
+print()
 
 print('--------------------------------------------------------------------------------------------------------------------------------------------------------')
 print('Вычисляем К * (F+A) * AT – AT + F:')
 
-FA = A + F
+FA = [[A[i][j] + F[i][j] for j in range(n)] for i in range(n)]
 print('Результат (F+A):')
 print_matrix(FA)
+print()
 
-KFA = K * FA
+KFA = [[K * FA[i][j] for j in range(n)] for i in range(n)]
 print('Результат К * (F+A):')
 print_matrix(KFA)
+print()
 
-At = A.T
+At = [[A[j][i] for j in range(n)] for i in range(n)]
 print("Матрица А транспонированая:")
 print_matrix(At)
+print()
 
-KFAT = np.dot(KFA, At)
+KFAT = [[sum([KFA[i][k] * At[k][j] for k in range(n)]) for j in range(n)] for i in range(n)]
 print('Результат К * (F+A) * AT:')
 print_matrix(KFAT)
+print()
 
-ATF = At + F
+ATF = [[At[i][j] + F[i][j] for j in range(n)] for i in range(n)]
 print('Результат AT + F:')
 print_matrix(ATF)
+print()
 
-result = KFAT - ATF
+result = [[KFAT[i][j] - ATF[i][j] for j in range(n)] for i in range(n)]
 print('Результат:')
 print_matrix(result)
