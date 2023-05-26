@@ -65,12 +65,24 @@ for i in range(n):
 if sym:
     print('Матрица А симметрична относительно главной диагонали.')
     print('Начальная подматрциа B:')
-    print_matrix(C)
-    for i in range((n // 4) + 1):
-        for j in range(i, n_hl - i):
-            B[j][i], B[j][((n // 4) + 1) - i] = B[j][((n // 4) + 1) - i], B[j][i]
+    print_matrix(B)
+    right_matrix = [[0] * n2 for i in range(n2)]
+    for i in range(n2 + 1):
+        for j in range(i, n2 - i):
+            right_matrix[j][n2 - i - 1] = B[j][n2 - i - 1]
+
+    # Извлекаем матрицу слева
+    left_matrix = [[0] * n2 for i in range(n2)]
+    for i in range(n2 + 1):
+        for j in range(i, n2 - i):
+            left_matrix[j][i] = B[j][i]
+    for i in range(n2 + 1):
+        for j in range(i, n2 - i):
+            B[j][n2 - i - 1] = left_matrix[j][i]
+            B[j][i] = right_matrix[j][n2 - i - 1]
+
     print('Получившаяся подматрица B:')
-    print_matrix(C)
+    print_matrix(B)
 else:
     print('Матрица А не симметрична относительно главной диагонали')
     C, E = E, C
