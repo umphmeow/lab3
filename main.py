@@ -10,9 +10,9 @@ def paste(matF, matrix, col_in, row_in):
 
 K = int(input('Введите число K: '))
 
-n = int(input('Введите число N, (N > 5): '))
+n = int(input('Введите число N, (N > 3): '))
 
-if n < 5:
+if n < 4:
     print('Введено неправильное N')
     exit()
 
@@ -28,13 +28,12 @@ print_matrix(A)
 print()
 
 n2 = n_hl = n // 2
-if n % 2 != 0:
-    n2 += 1
-
-E = [row[n2:n] for row in A[0:n_hl]]
+E = [row[n2:n] for row in A[0:n_hl+1]]
 B = [row[n2:n] for row in A[n2:n]]
-C = [row[0:n_hl] for row in A[n2:n]]
-D = [row[0:n_hl] for row in A[0:n_hl]]
+C = [row[0:n_hl+1] for row in A[n2:]]
+D = [row[0:n_hl+1] for row in A[0:n_hl+1]]
+if n % 2 == 1:
+    n2 = n_hl = n // 2 + 1
 
 print('--------------------------------------------------------------------------------------------------------------------------------------------------------')
 print('Подматрицы матрицы A:')
@@ -66,17 +65,17 @@ if sym:
     print('Матрица А симметрична относительно главной диагонали.')
     print('Начальная подматрциа B:')
     print_matrix(B)
-    right_matrix = [[0] * n2 for i in range(n2)]
+    right_matrix = [[0] * (n2+1) for i in range(n2 + 1)]
     for i in range(n2 + 1):
         for j in range(i, n2 - i):
             right_matrix[j][n2 - i - 1] = B[j][n2 - i - 1]
 
     # Извлекаем матрицу слева
-    left_matrix = [[0] * n2 for i in range(n2)]
+    left_matrix = [[0] * (n2+1) for i in range(n2+1)]
     for i in range(n2 + 1):
         for j in range(i, n2 - i):
             left_matrix[j][i] = B[j][i]
-    for i in range(n2 + 1):
+    for i in range(n2):
         for j in range(i, n2 - i):
             B[j][n2 - i - 1] = left_matrix[j][i]
             B[j][i] = right_matrix[j][n2 - i - 1]
@@ -86,7 +85,8 @@ if sym:
 else:
     print('Матрица А не симметрична относительно главной диагонали')
     C, E = E, C
-
+if n % 2 == 1:
+    n2 = n_hl = n_hl-1
 F = [[0 for j in range(n)] for i in range(n)]
 for i in range(n_hl):
     for j in range(n_hl):
